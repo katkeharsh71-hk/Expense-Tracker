@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Expense Tracker</title>
+  <style>
+    body { font-family: Arial; max-width: 400px; margin: 20px auto; padding: 0 10px; }
+    input, select, button { padding: 8px; margin: 3px 0; width: 100%; box-sizing: border-box; }
+    li { display: flex; justify-content: space-between; margin: 6px 0; }
+    .income { color: green; } .expense { color: red; }
+  </style>
+</head>
+<body>
+  <h2>Expense Tracker</h2>
+  <h3>Balance: $<span id="balance">0</span></h3>
+  <p>Income: $<span id="inc">0</span> | Expenses: $<span id="exp">0</span></p>
+
+  <input id="desc" placeholder="Description">
+  <input id="amt" type="number" placeholder="Amount">
+  <select id="type"><option>income</option><option>expense</option></select>
+  <select id="cat"><option>Food</option><option>Bills</option><option>Salary</option><option>Other</option></select>
+  <button onclick="add()">Add</button>
+
+  <ul id="list"></ul>
+
+<script>
+  let items = JSON.parse(localStorage.getItem("items")) || [];
+
+  function add() {
+    const amount = Number(amt.value);
+    if (!desc.value || !amount) return;
+    items.push({ desc: desc.value, amount, type: type.value, cat: cat.value });
+    desc.value = amt.value = "";
+    show();
+  }
+
+  function remove(i) {
+    items.splice(i, 1);
+    show();
+  }
+
+  function show() {
+    localStorage.setItem("items", JSON.stringify(items));
+    let inc = 0, exp = 0;
+    list.innerHTML = "";
+    items.forEach((it, i) => {
+      it.type == "income" ? inc += it.amount : exp += it.amount;
+      list.innerHTML += `<li class="${it.type}">
+        <span>${it.desc} (${it.cat})</span>
+        <span>$${it.amount} <button style="width:auto" onclick="remove(${i})">x</button></span>
+      </li>`;
+    });
+    document.getElementById("inc").textContent = inc;
+    document.getElementById("exp").textContent = exp;
+    balance.textContent = inc - exp;
+  }
+
+  show();
+</script>
+</body>
+</html>
