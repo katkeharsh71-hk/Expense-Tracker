@@ -25,8 +25,3 @@ No installation needed.
 - HTML
 - CSS
 - JavaScript (`localStorage`)
-
-## Ideas for Improvement
-- Add a date to each entry
-- Filter entries by category
-- Add a chart
